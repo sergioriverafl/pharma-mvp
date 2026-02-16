@@ -19,6 +19,9 @@ export class MockProvider implements AIProvider {
     };
   }
 
+  // ajustar reglas, de acuerdo a parámetros que permitan identificar falsificación del producto,
+  // en el scraping recolectar información adicional.
+  
   private detectAnomalies(input: PostAnalysisInput): Anomaly[] {
     const anomalies: Anomaly[] = [];
 

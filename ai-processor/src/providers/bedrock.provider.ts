@@ -44,9 +44,18 @@ export class BedrockProvider implements AIProvider {
     return this.parseClaudeResponse(input.postId, responseBody.content[0].text);
   }
 
+
+  // todo: prompt para prueba al interconectar todas las aplicaciones
+  // todo: afinar sistema propio para detectar anomalias en las publicaciones
+  //       crear sistema propio estilo colección de reglas que permitar refinar el resultado, tanto a nivel
+  //       programtico como con IA.
+  //       Crear sistema con conjunto de experiencias que permita retro-alimentar aplicaciones de
+  //       capas más altas.
+  //       Sistema de mascaras (investigar)
+
+
   private buildPrompt(input: PostAnalysisInput): string {
     return `Analiza la siguiente publicación de producto farmacéutico y detecta anomalías:
-
 Plataforma: ${input.platform}
 Título: ${input.title}
 Descripción: ${input.description}

@@ -47,7 +47,6 @@ export class PostsRepository {
   ): Promise<{ items: Post[]; lastEvaluatedKey?: string }> {
     const { limit = 20, lastEvaluatedKey } = pagination;
 
-    // Build filter expression
     const filterExpressions: string[] = [];
     const expressionAttributeNames: Record<string, string> = {};
     const expressionAttributeValues: Record<string, any> = {};
@@ -135,7 +134,6 @@ export class PostsRepository {
   ): Promise<{ items: Post[]; lastEvaluatedKey?: string }> {
     const { limit = 20, lastEvaluatedKey } = pagination;
 
-    // Assumes GSI on platform exists
     const result = await docClient.send(
       new QueryCommand({
         TableName: this.tableName,

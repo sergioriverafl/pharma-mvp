@@ -1,7 +1,7 @@
 import { Processor } from './processor';
 import { PostAnalysisInput } from './providers/types';
 
-// Configurar para usar Mock Provider localmente
+// para usar Mock Provider localmente
 process.env.AI_PROVIDER = 'mock';
 
 const testPost: PostAnalysisInput = {
