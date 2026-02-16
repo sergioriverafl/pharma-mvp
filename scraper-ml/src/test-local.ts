@@ -13,7 +13,7 @@ async function testScraper() {
     console.log("Buscando productos...\n");
 
     const result = await scraper.scrape({
-      searchQuery: "ibuprofeno",
+      searchQuery: "buscapina",
       maxResults: 10,
       headless: false,
     });
