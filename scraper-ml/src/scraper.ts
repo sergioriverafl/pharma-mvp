@@ -12,7 +12,7 @@ export class MercadoLibreScraper {
       ? process.env.BROWSER_LOCAL_EXECUTE_PATH || "/opt/homebrew/bin/chromium"
       : await chromium_pkg.executablePath();
 
-    console.log(isLocal ? "🏠 Local" : "☁️  Lambda");
+    console.log(isLocal ? "Local" : "Lambda");
 
     this.browser = await chromium.launch({
       args: isLocal
@@ -41,7 +41,7 @@ export class MercadoLibreScraper {
 
     try {
       const url = `https://listado.mercadolibre.com.co/${config.searchQuery}`;
-      console.log(`🔗 ${url}`);
+      console.log(`${url}`);
 
       await this.page.goto(url, {
         waitUntil: "domcontentloaded",
@@ -55,11 +55,11 @@ export class MercadoLibreScraper {
         const closeBtn = await this.page.$('button:has-text("Más tarde")');
         if (closeBtn) {
           await closeBtn.click();
-          console.log("✅ Modal cerrado");
+          console.log("Modal cerrado");
           await this.page.waitForTimeout(1000);
         }
       } catch (e) {
-        console.log("⚠️  Sin modal");
+        console.log("Sin modal");
       }
 
       await this.page.screenshot({
@@ -113,17 +113,15 @@ export class MercadoLibreScraper {
           });
         });
 
-        console.log(`✅ Extraídos: ${results.length}`);
+        console.log(`Extraídos: ${results.length}`);
         return results;
       });
-
-      console.log(items);
-
+      // console.log(items);
       posts.push(...items.slice(0, config.maxResults));
-      console.log(`📦 Total: ${posts.length} productos`);
+      console.log(`Total: ${posts.length} productos`);
     } catch (err) {
       errors.push(`Error: ${err}`);
-      console.error("❌", err);
+      console.error("Error: ", err);
     }
 
     return { posts, totalFound: posts.length, errors };
