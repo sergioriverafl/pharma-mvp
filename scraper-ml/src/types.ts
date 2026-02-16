@@ -1,6 +1,6 @@
 export interface ScrapedPost {
   id: string;
-  platform: 'mercadolibre';
+  platform: "mercadolibre";
   title: string;
   price: number;
   currency: string;

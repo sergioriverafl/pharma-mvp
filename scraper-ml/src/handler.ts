@@ -1,8 +1,7 @@
-
-import { SQSClient, SendMessageBatchCommand } from '@aws-sdk/client-sqs';
-import { scrapeMercadoLibre } from './scraper';
-import { ScrapedPost } from './types';
-import { config } from './config';
+import { SQSClient, SendMessageBatchCommand } from "@aws-sdk/client-sqs";
+import { scrapeMercadoLibre } from "./scraper";
+import { ScrapedPost } from "./types";
+import { config } from "./config";
 
 const sqsClient = new SQSClient({});
 
@@ -12,9 +11,9 @@ interface LambdaEvent {
 }
 
 export const handler = async (event: LambdaEvent) => {
-  console.log('Starting MercadoLibre scraper', event);
+  console.log("Starting MercadoLibre scraper", event);
 
-  const searchQuery = event.searchQuery || 'medicamentos';
+  const searchQuery = event.searchQuery || "medicamentos";
   const maxResults = event.maxResults || config.scraper.defaultMaxResults;
 
   try {
@@ -23,7 +22,7 @@ export const handler = async (event: LambdaEvent) => {
 
     console.log(`Scraped ${result.totalFound} posts`);
     if (result.errors.length > 0) {
-      console.warn('Scraping errors:', result.errors);
+      console.warn("Scraping errors:", result.errors);
     }
 
     // Enviar posts a SQS en lotes
@@ -36,28 +35,27 @@ export const handler = async (event: LambdaEvent) => {
       body: JSON.stringify({
         success: true,
         totalScraped: result.totalFound,
-        errors: result.errors
-      })
+        errors: result.errors,
+      }),
     };
-
   } catch (error) {
-    console.error('Scraping failed:', error);
-    
+    console.error("Scraping failed:", error);
+
     return {
       statusCode: 500,
       body: JSON.stringify({
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error'
-      })
+        error: error instanceof Error ? error.message : "Unknown error",
+      }),
     };
   }
 };
 
 async function sendToSQS(posts: ScrapedPost[]): Promise<void> {
   const queueUrl = config.sqs.queueUrl;
-  
+
   if (!queueUrl) {
-    console.warn('SQS_QUEUE_URL not configured, skipping queue');
+    console.warn("SQS_QUEUE_URL not configured, skipping queue");
     return;
   }
 
@@ -70,21 +68,23 @@ async function sendToSQS(posts: ScrapedPost[]): Promise<void> {
       MessageBody: JSON.stringify(post),
       MessageAttributes: {
         platform: {
-          DataType: 'String',
-          StringValue: post.platform
-        }
-      }
+          DataType: "String",
+          StringValue: post.platform,
+        },
+      },
     }));
 
     try {
-      await sqsClient.send(new SendMessageBatchCommand({
-        QueueUrl: queueUrl,
-        Entries: entries
-      }));
+      await sqsClient.send(
+        new SendMessageBatchCommand({
+          QueueUrl: queueUrl,
+          Entries: entries,
+        }),
+      );
 
       console.log(`Sent batch of ${batch.length} messages to SQS`);
     } catch (error) {
-      console.error('Error sending to SQS:', error);
+      console.error("Error sending to SQS:", error);
       throw error;
     }
   }
